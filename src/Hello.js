@@ -10,5 +10,4 @@ const Hello = (props) => {
     );
 }
 
-
 export default Hello;
