@@ -7,12 +7,11 @@ import './App.css';
 
 import { setSearchField, requestRobots } from '../actions';
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     searchField: state.searchRobots.searchField,
     robots: state.requestRobots.robots,
-    isPending: state.requestRobots.isPending,
-    error: state.requestRobots.error
+    isPending: state.requestRobots.isPending
   }
 }
 const mapDispatchToProps = (dispatch) => {
@@ -23,33 +22,23 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class App extends Component {
-  constructor() {
-    super()
-    this.state = {
-      robots: []
-    }
-  }
-
   componentDidMount() {
-    fetch('https://jsonplaceholder.typicode.com/users')
-    .then(response => response.json())
-    .then(users => this.setState({ robots: users }));
+    this.props.onRequestRobots();
   }
 
   render() {
-    const { robots } = this.state;
-    const { searchField, onSearchChange } = this.props;
+    const { searchField, onSearchChange, isPending, robots } = this.props;
     const filteredRobots = robots.filter(robot => {
       return robot.name.toLowerCase().includes(searchField.toLowerCase());
     })
-    return !robots.length ?
-      <h1>Loading</h1> :
-    (
+    return (
         <div className='tc'>
           <h1> Robo Family </h1>
           <SearchBox searchChange={onSearchChange}/>
           <Scroll>
+            { isPending ? <h1> Loading </h1> :
             <CardList robots={filteredRobots}/>
+            }
           </Scroll>
         </div>
     );
